@@ -1,6 +1,9 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+
 let chosenDate = null;
 
 const options = {
@@ -14,7 +17,11 @@ const options = {
     const dateInMilliseconds = dateObject.getTime();
 
     if (dateInMilliseconds < Date.now()) {
-      window.alert('You must choose date from the future');
+      iziToast.warning({
+        title: 'Caution',
+        message: 'You must choose date from the future',
+        position: 'topRight',
+      });
       return;
     }
 
@@ -40,15 +47,12 @@ function onStart() {
     const { days, hours, minutes, seconds } = convertMs(
       chosenDate - Date.now()
     );
-    setValueInMarkup(daysValue, days);
-    setValueInMarkup(hoursValue, hours);
-    setValueInMarkup(minutesValue, minutes);
-    setValueInMarkup(secondsValue, seconds);
-  }, 1000);
-}
 
-function setValueInMarkup(valueInMarkup, valueToSet) {
-  valueInMarkup.textContent = valueToSet > 0 ? valueToSet.toString() : '00';
+    daysValue.textContent = addLeadingZero(days.toString());
+    hoursValue.textContent = addLeadingZero(hours.toString());
+    minutesValue.textContent = addLeadingZero(minutes.toString());
+    secondsValue.textContent = addLeadingZero(seconds.toString());
+  }, 1000);
 }
 
 function setAttribute(element, attribute, value) {
@@ -74,4 +78,11 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+}
+
+function addLeadingZero(value) {
+  if (Number(value) > 10) {
+    return value;
+  }
+  return value.padStart(2, '0');
 }
