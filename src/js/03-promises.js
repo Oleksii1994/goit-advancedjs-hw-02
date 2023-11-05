@@ -26,6 +26,7 @@ function onSubmit(event) {
       });
     delayForNextPromise += Number(step.value);
   }
+  resetForm();
 }
 
 function createPromise(position, delay) {
@@ -40,4 +41,11 @@ function createPromise(position, delay) {
     }, delay);
   });
   return promise;
+}
+
+function resetForm() {
+  const { delay, step, amount } = form.elements;
+  delay.value = '';
+  step.value = '';
+  amount.value = '';
 }
