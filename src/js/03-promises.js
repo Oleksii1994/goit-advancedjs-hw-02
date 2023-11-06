@@ -49,29 +49,3 @@ function resetForm() {
   step.value = '';
   amount.value = '';
 }
-
-//-----------------------------------
-
-const BASE_URL = 'https://jsonplaceholder.typicode.com/posts';
-
-const searchParams = new URLSearchParams({
-  _limit: 12,
-  _sort: 'title',
-});
-
-fetch(`${BASE_URL}?${searchParams}`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    return response.json();
-    // Response handling
-  })
-  .then(data => {
-    console.log(data);
-    // Data handling
-  })
-  .catch(error => {
-    console.log(error.message);
-    // Error handling
-  });

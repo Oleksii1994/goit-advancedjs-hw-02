@@ -18,7 +18,6 @@ const options = {
 
     if (dateInMilliseconds < Date.now()) {
       iziToast.warning({
-        title: 'Caution',
         message: 'You must choose date from the future',
         position: 'topRight',
       });
@@ -29,8 +28,8 @@ const options = {
     removeAttribute(startBtn, 'disabled');
   },
 };
-
 flatpickr('#datetime-picker', options);
+const input = document.getElementById('datetime-picker');
 
 const daysValue = document.querySelector('[data-days]');
 const hoursValue = document.querySelector('[data-hours]');
@@ -43,16 +42,30 @@ startBtn.addEventListener('click', onStart);
 setAttribute(startBtn, 'disabled', true);
 
 function onStart() {
-  setInterval(() => {
+  const intervalId = setInterval(() => {
     const { days, hours, minutes, seconds } = convertMs(
       chosenDate - Date.now()
     );
+
+    if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+      removeAttribute(input, 'disabled');
+      removeAttribute(startBtn, 'disabled');
+      clearInterval(intervalId);
+      iziToast.success({
+        message: 'Time is out',
+        position: 'topRight',
+      });
+    }
 
     daysValue.textContent = addLeadingZero(days.toString());
     hoursValue.textContent = addLeadingZero(hours.toString());
     minutesValue.textContent = addLeadingZero(minutes.toString());
     secondsValue.textContent = addLeadingZero(seconds.toString());
   }, 1000);
+
+  setAttribute(startBtn, 'disabled', true);
+
+  setAttribute(input, 'disabled', true);
 }
 
 function setAttribute(element, attribute, value) {
